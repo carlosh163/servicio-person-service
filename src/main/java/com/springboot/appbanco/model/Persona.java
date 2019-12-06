@@ -1,26 +1,38 @@
 package com.springboot.appbanco.model;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+@Document(collection = "persona")
 public class Persona {
 
-	int codPersona;
-	String nombre;
-	String apellidos;
-	TipoPersona tPersona;
-	TipoDocumento tTipoDocumento;
-	String nroDocumento;
-	char estado;
+	@Id
+	private String codPersona;
+	
+	private String nombre;
+	private String apellidos;
+	private String tipoPersona;
+	private String tipoDocumento;
+	private String nroDocumento;
+	private char estado;
 	
 	public Persona() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public int getCodPersona() {
+	
+
+	public String getCodPersona() {
 		return codPersona;
 	}
 
-	public void setCodPersona(int codPersona) {
+
+
+	public void setCodPersona(String codPersona) {
 		this.codPersona = codPersona;
 	}
+
+
 
 	public String getNombre() {
 		return nombre;
@@ -38,20 +50,20 @@ public class Persona {
 		this.apellidos = apellidos;
 	}
 
-	public TipoPersona gettPersona() {
-		return tPersona;
+	public String getTipoPersona() {
+		return tipoPersona;
 	}
 
-	public void settPersona(TipoPersona tPersona) {
-		this.tPersona = tPersona;
+	public void setTipoPersona(String tipoPersona) {
+		this.tipoPersona = tipoPersona;
 	}
 
-	public TipoDocumento gettTipoDocumento() {
-		return tTipoDocumento;
+	public String getTipoDocumento() {
+		return tipoDocumento;
 	}
 
-	public void settTipoDocumento(TipoDocumento tTipoDocumento) {
-		this.tTipoDocumento = tTipoDocumento;
+	public void setTipoDocumento(String tipoDocumento) {
+		this.tipoDocumento = tipoDocumento;
 	}
 
 	public String getNroDocumento() {
@@ -69,6 +81,7 @@ public class Persona {
 	public void setEstado(char estado) {
 		this.estado = estado;
 	}
+
 	
 	
 	
