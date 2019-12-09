@@ -20,8 +20,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.springboot.appbanco.model.Persona;
-import com.springboot.appbanco.service.IPersonaService;
+import com.springboot.appbanco.model.Person;
+import com.springboot.appbanco.service.IPersonService;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -29,7 +29,7 @@ import reactor.core.publisher.Mono;
 
 @RefreshScope
 @RestController
-@RequestMapping("api/persona")
+@RequestMapping("api/person")
 public class PersonController {
 	
 	
@@ -39,7 +39,7 @@ public class PersonController {
 	private Environment env;
 	
 	@Autowired
-	private IPersonaService service;
+	private IPersonService service;
 	
 	@Value("${configuracion.texto}")
 	private String texto;
@@ -61,23 +61,23 @@ public class PersonController {
 	
 	
 	@GetMapping
-	public Flux<Persona> findAll(){
+	public Flux<Person> findAll(){
 		return service.findAll();
 	}
 	
 	@GetMapping("/{id}")
-	public Mono<Persona> findById(@PathVariable String id){
+	public Mono<Person> findById(@PathVariable String id){
 		return service.findById(id);
 	}
 	
 	@PostMapping
-	public Mono<Persona> create(@RequestBody Persona perso){
+	public Mono<Person> create(@RequestBody Person perso){
 		return service.create(perso);
 	}
 	
 	
 	@PutMapping("/{id}")
-	public Mono<Persona> update(@RequestBody Persona perso, @PathVariable String id){
+	public Mono<Person> update(@RequestBody Person perso, @PathVariable String id){
 		return service.update(perso, id);
 	}
 	

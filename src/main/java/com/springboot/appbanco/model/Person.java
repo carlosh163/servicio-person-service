@@ -4,42 +4,35 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "persona")
-public class Persona {
+public class Person {
 
 	@Id
 	private String codPersona;
 	
-	private String nombre;
+	private String nombres;
 	private String apellidos;
-	private String tipoPersona;
-	private String tipoDocumento;
-	private String nroDocumento;
+	private String tipoDocumento; //DNI o Carnet de Extrangeria.
+	private String nroDocumento; 
 	private char estado;
 	
-	public Persona() {
+	public Person() {
 		// TODO Auto-generated constructor stub
 	}
-
-	
 
 	public String getCodPersona() {
 		return codPersona;
 	}
 
-
-
 	public void setCodPersona(String codPersona) {
 		this.codPersona = codPersona;
 	}
 
-
-
-	public String getNombre() {
-		return nombre;
+	public String getNombres() {
+		return nombres;
 	}
 
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
+	public void setNombres(String nombres) {
+		this.nombres = nombres;
 	}
 
 	public String getApellidos() {
@@ -48,14 +41,6 @@ public class Persona {
 
 	public void setApellidos(String apellidos) {
 		this.apellidos = apellidos;
-	}
-
-	public String getTipoPersona() {
-		return tipoPersona;
-	}
-
-	public void setTipoPersona(String tipoPersona) {
-		this.tipoPersona = tipoPersona;
 	}
 
 	public String getTipoDocumento() {
@@ -81,6 +66,8 @@ public class Persona {
 	public void setEstado(char estado) {
 		this.estado = estado;
 	}
+
+	
 
 	
 	
