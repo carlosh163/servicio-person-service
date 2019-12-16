@@ -1,19 +1,20 @@
 package com.springboot.appbanco.service;
 
-import com.springboot.appbanco.model.Person;
+import com.springboot.appbanco.model.Account;
+import com.springboot.appbanco.model.PersonAuthorized;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public interface IPersonService {
 
-	public Flux<Person> findAll();
+	public Flux<PersonAuthorized> findAll();
 
-	public Mono<Person> findById(String id);
+	public Mono<PersonAuthorized> findById(String id);
 
-	public Mono<Person> create(Person perso);
+	public Flux<PersonAuthorized> create(Account account);
 
-	public Mono<Person> update(Person perso, String id);
+	public Mono<PersonAuthorized> update(PersonAuthorized perso, String id);
 
 	public Mono<Void> delete(String id);
 }
