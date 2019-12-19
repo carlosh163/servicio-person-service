@@ -34,16 +34,33 @@ public class PersonServiceImpl implements IPersonService {
 
 			return objacc.getPersonAuthorizedList();
 		}).flatMapMany(lstC -> Flux.fromIterable(lstC)).flatMap(objC -> {
+
+			String DNI = objC.getDocumentNumber();
+
 			Account objAcNew = new Account();
 
+			objAcNew.setProductType(account.getProductType());
+			objAcNew.setAccountType(account.getAccountType());
 			objAcNew.setAccountNumber(account.getAccountNumber());
 			objAcNew.setOpeningDate(account.getOpeningDate());
 			objAcNew.setBalance(account.getBalance());
 			objAcNew.setAccountstatus(account.getAccountstatus());
-
 			objC.getAccountList().add(objAcNew); // List<Client> info..
 
-			return repo.save(objC);
+			return repo.findBydocumentNumber(DNI).switchIfEmpty(Mono.just(objC)).flatMap(objAC -> {
+				if (objAC.getIdPersonAutho() != null) {
+
+					return repo.findById(objAC.getIdPersonAutho()).flatMap(client -> {
+
+						client.getAccountList().add(objAcNew);
+						return repo.save(client);
+					});
+
+				} else {
+					return repo.save(objAC);
+				}
+
+			});
 		});
 
 	}
@@ -68,6 +85,16 @@ public class PersonServiceImpl implements IPersonService {
 	public Mono<Void> delete(String id) {
 		// TODO Auto-generated method stub
 		return repo.findById(id).flatMap(client -> repo.delete(client));
+	}
+
+	@Override
+	public Flux<PersonAuthorized> findByPersonsByAccountNumber(Integer accNumber) {
+		return repo.findByPersonByAccountNumber(accNumber);
+	}
+
+	@Override
+	public Mono<PersonAuthorized> createPPerson(PersonAuthorized persoAutho) {
+		return repo.save(persoAutho);
 	}
 
 }

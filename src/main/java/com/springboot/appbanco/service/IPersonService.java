@@ -17,4 +17,7 @@ public interface IPersonService {
 	public Mono<PersonAuthorized> update(PersonAuthorized perso, String id);
 
 	public Mono<Void> delete(String id);
+	
+	public Mono<PersonAuthorized> createPPerson(PersonAuthorized persoAutho);
+	public Flux<PersonAuthorized> findByPersonsByAccountNumber(Integer accNumber);
 }

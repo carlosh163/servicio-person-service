@@ -1,6 +1,7 @@
 package com.springboot.appbanco.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -27,64 +28,135 @@ import com.springboot.appbanco.service.IPersonService;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-
 @RefreshScope
 @RestController
 @RequestMapping("api/person")
 public class PersonController {
-	
-	
+
 	private static Logger log = LoggerFactory.getLogger(PersonController.class);
 
 	@Autowired
 	private Environment env;
-	
+
 	@Autowired
 	private IPersonService service;
-	
+
 	@Value("${configuracion.texto}")
 	private String texto;
-	
+
 	@GetMapping("/obtener-config")
-	public ResponseEntity<?> obtenerConfig(@Value("${server.port}") String puerto){
+	public ResponseEntity<?> obtenerConfig(@Value("${server.port}") String puerto) {
 		log.info(texto);
-		Map<String,String> json =  new HashMap<>();
+		Map<String, String> json = new HashMap<>();
 		json.put("texto", texto);
 		json.put("puerto", puerto);
-		
-		if(env.getActiveProfiles().length > 0 && env.getActiveProfiles()[0].equals("dev")) {
+
+		if (env.getActiveProfiles().length > 0 && env.getActiveProfiles()[0].equals("dev")) {
 			json.put("auto.nombre", env.getProperty("configuracion.autor.nombre"));
 			json.put("auto.email", env.getProperty("configuracion.autor.email"));
 		}
-		
-		 return new ResponseEntity<Map<String,String>>(json,HttpStatus.OK);
+
+		return new ResponseEntity<Map<String, String>>(json, HttpStatus.OK);
 	}
-	
-	
+
 	@GetMapping
-	public Flux<PersonAuthorized> findAll(){
+	public Flux<PersonAuthorized> findAll() {
 		return service.findAll();
 	}
-	
+
 	@GetMapping("/{id}")
-	public Mono<PersonAuthorized> findById(@PathVariable String id){
+	public Mono<PersonAuthorized> findById(@PathVariable String id) {
 		return service.findById(id);
 	}
-	
+
 	@PostMapping
-	public Flux<PersonAuthorized> create(@RequestBody Account acc){
+	public Flux<PersonAuthorized> create(@RequestBody Account acc) {
 		return service.create(acc);
 	}
-	
-	
+
 	@PutMapping("/{id}")
-	public Mono<PersonAuthorized> update(@RequestBody PersonAuthorized perso, @PathVariable String id){
+	public Mono<PersonAuthorized> update(@RequestBody PersonAuthorized perso, @PathVariable String id) {
 		return service.update(perso, id);
 	}
-	
+
 	@DeleteMapping("/{id}")
-	public Mono<Void> delete(@PathVariable String id){
+	public Mono<Void> delete(@PathVariable String id) {
 		return service.delete(id);
 	}
-	
+
+	// Consumo Trans:
+
+	@PutMapping("/updateBalanceAccountByAccountNumber/{accountNumber}/{quantity}")
+	public Flux<PersonAuthorized> updateBalanceAccountByAccountNumber(@PathVariable Integer accountNumber,
+			@PathVariable double quantity) {
+
+		return service.findByPersonsByAccountNumber(accountNumber).flatMap(client -> {
+			List<Account> listAcc = client.getAccountList();
+
+			Account m = new Account();
+			for (int i = 0; i < listAcc.size(); i++) { // Account obj:listAcc
+				Account obj = listAcc.get(i);
+
+				if (accountNumber.equals(obj.getAccountNumber())) {
+					m.setAccountNumber(obj.getAccountNumber());
+					m.setProductType(obj.getProductType());
+					m.setAccountType(obj.getAccountType());
+
+					m.setOpeningDate(obj.getOpeningDate());
+					m.setAccountstatus(obj.getAccountstatus());
+
+					m.setBalance(obj.getBalance() + quantity);
+
+					listAcc.set(i, m);
+				}
+
+			}
+			client.setAccountList(listAcc);
+			return service.createPPerson(client);
+
+		});
+
+	}
+
+	@PutMapping("/updateBalanceAccountRetireByAccountNumber/{accountNumber}/{quantity}")
+	public Flux<PersonAuthorized> updateBalanceAccountRetireByAccountNumber(@PathVariable Integer accountNumber,
+			@PathVariable double quantity) {
+
+		return service.findByPersonsByAccountNumber(accountNumber).flatMap(client -> {
+			List<Account> listAcc = client.getAccountList();
+
+			Account m = new Account();
+			for (int i = 0; i < listAcc.size(); i++) { // Account obj:listAcc
+				Account obj = listAcc.get(i);
+
+				if (accountNumber.equals(obj.getAccountNumber())) {
+
+					// validacion sin negativo:
+					if (obj.getBalance() - quantity >= 0) {
+						m.setAccountNumber(obj.getAccountNumber());
+						m.setProductType(obj.getProductType());
+						m.setAccountType(obj.getAccountType());
+
+						m.setOpeningDate(obj.getOpeningDate());
+						m.setAccountstatus(obj.getAccountstatus());
+
+						m.setBalance(obj.getBalance() - quantity);
+
+						listAcc.set(i, m);
+						client.setAccountList(listAcc);
+					} else {
+						System.out.println("Error saldo insuficiente..");
+						return Mono.empty();
+					}
+
+				}
+
+			}
+
+			return service.createPPerson(client);
+
+		});
+
+	}
+
 }
