@@ -45,6 +45,10 @@ public class PersonServiceImpl implements IPersonService {
 			objAcNew.setOpeningDate(account.getOpeningDate());
 			objAcNew.setBalance(account.getBalance());
 			objAcNew.setAccountstatus(account.getAccountstatus());
+			objAcNew.setNumMaxDesposit(account.getNumMaxDesposit());
+	        objAcNew.setNumMaxRetirement(account.getNumMaxRetirement());
+	        objAcNew.setMinBalanceEndMonth(account.getMinBalanceEndMonth());
+	        objAcNew.setBankName(account.getBankName());
 			objC.getAccountList().add(objAcNew); // List<Client> info..
 
 			return repo.findBydocumentNumber(DNI).switchIfEmpty(Mono.just(objC)).flatMap(objAC -> {

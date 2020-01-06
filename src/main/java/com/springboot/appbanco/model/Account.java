@@ -39,6 +39,14 @@ public class Account {
 	
 	private List<PersonAuthorized> personAuthorizedList; //Personas Autorizadas
 	
+	//Atributos PROYECTO 2:
+  private Integer numMaxDesposit;
+  private Integer numMaxRetirement;
+  
+  private double minBalanceEndMonth;
+  
+  
+  private String bankName;
 	private char accountstatus; //Activo o Inactivo.
 
 	/*public String getCodAccount() {
@@ -107,6 +115,38 @@ public class Account {
 
 	public void setAccountType(String accountType) {
 		this.accountType = accountType;
+	}
+
+	public Integer getNumMaxDesposit() {
+		return numMaxDesposit;
+	}
+
+	public void setNumMaxDesposit(Integer numMaxDesposit) {
+		this.numMaxDesposit = numMaxDesposit;
+	}
+
+	public Integer getNumMaxRetirement() {
+		return numMaxRetirement;
+	}
+
+	public void setNumMaxRetirement(Integer numMaxRetirement) {
+		this.numMaxRetirement = numMaxRetirement;
+	}
+
+	public double getMinBalanceEndMonth() {
+		return minBalanceEndMonth;
+	}
+
+	public void setMinBalanceEndMonth(double minBalanceEndMonth) {
+		this.minBalanceEndMonth = minBalanceEndMonth;
+	}
+
+	public String getBankName() {
+		return bankName;
+	}
+
+	public void setBankName(String bankName) {
+		this.bankName = bankName;
 	}
 
 	

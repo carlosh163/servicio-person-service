@@ -30,7 +30,7 @@ import reactor.core.publisher.Mono;
 
 @RefreshScope
 @RestController
-@RequestMapping("api/person")
+//@RequestMapping("api/person")
 public class PersonController {
 
 	private static Logger log = LoggerFactory.getLogger(PersonController.class);
@@ -59,27 +59,27 @@ public class PersonController {
 		return new ResponseEntity<Map<String, String>>(json, HttpStatus.OK);
 	}
 
-	@GetMapping
+	@GetMapping("/SearchAll")
 	public Flux<PersonAuthorized> findAll() {
 		return service.findAll();
 	}
 
-	@GetMapping("/{id}")
+	@GetMapping("/SearchById/{id}")
 	public Mono<PersonAuthorized> findById(@PathVariable String id) {
 		return service.findById(id);
 	}
 
-	@PostMapping
+	@PostMapping("/Create")
 	public Flux<PersonAuthorized> create(@RequestBody Account acc) {
 		return service.create(acc);
 	}
 
-	@PutMapping("/{id}")
+	@PutMapping("/Edit/{id}")
 	public Mono<PersonAuthorized> update(@RequestBody PersonAuthorized perso, @PathVariable String id) {
 		return service.update(perso, id);
 	}
 
-	@DeleteMapping("/{id}")
+	@DeleteMapping("/Remove/{id}")
 	public Mono<Void> delete(@PathVariable String id) {
 		return service.delete(id);
 	}
